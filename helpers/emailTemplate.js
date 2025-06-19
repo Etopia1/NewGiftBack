@@ -265,9 +265,9 @@ exports.paymentReceiptTemplate = (
     </div>
   </div>
 </body>
+
 </html>`;
 };
-
 
 
 exports.forgotPasswordTemplate = (otp, fullName) => {

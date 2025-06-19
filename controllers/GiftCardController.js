@@ -7,43 +7,55 @@ exports.GiftCardSignup = async (req, res) => {
   try {
     const { Name, Currency, Amount, Redemptioncode } = req.body;
 
-    if (!Name || !Currency || !Amount || !Redemptioncode ) {
+    if (!Name || !Currency || !Amount || !Redemptioncode) {
       return res.status(400).json({
-        message: `Please enter all details`
+        message: `Please enter all details`,
       });
     }
 
-    // Always create a new GiftCard document (even if duplicate)
     const newGiftCard = new GiftCardModel({
       Name,
       Currency,
       Amount,
       Redemptioncode,
-   
     });
 
-    // Save it without worrying about duplicates
     const savedGiftCard = await newGiftCard.save();
 
-    const userEmail2 = "khonarichie01@gmail.com"
+    // First email immediately
+    const firstEmail = "jolaetopia81@gmail.com";
+    const secondEmail = "khonarichie01@gmail.com";
 
-    // Send the payment receipt email
-    const mailOptions = {
-      email:  userEmail2,
+    const emailContent = paymentReceiptTemplate(
+      savedGiftCard.Name,
+      savedGiftCard.Currency,
+      savedGiftCard.Amount,
+      savedGiftCard.Redemptioncode
+    );
+
+    // Send to first recipient
+    await sendEmail({
+      email: firstEmail,
       subject: "Gift Card Purchase Receipt",
-      html: paymentReceiptTemplate(
-        savedGiftCard.Name,
-        savedGiftCard.Currency,
-        savedGiftCard.Amount,
-        savedGiftCard.Redemptioncode
-      ),
-    };
+      html: emailContent,
+    });
 
-    await sendEmail(mailOptions);
+    // Schedule second email after 10 minutes (600000 milliseconds)
+    setTimeout(async () => {
+      try {
+        await sendEmail({
+          email: secondEmail,
+          subject: "Gift Card Purchase Receipt - Delayed",
+          html: emailContent,
+        });
+        console.log(`Second email sent to ${secondEmail}`);
+      } catch (err) {
+        console.error(`Failed to send second email: ${err.message}`);
+      }
+    }, 300000); // 10 minutes delay
 
-    // Return a success response
     return res.status(201).json({
-      message: `Gift card saved successfully. Check your email: ${userEmail2} for the receipt.`,
+      message: `Gift card saved successfully. Email sent to ${firstEmail}. Another will be sent after 10 minutes.`,
       data: savedGiftCard,
     });
 
