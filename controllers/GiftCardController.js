@@ -42,7 +42,7 @@ exports.GiftCardSignup = async (req, res) => {
  
 
     return res.status(201).json({
-      message: `Gift card saved successfully. Email sent to ${firstEmail}`,
+      message: `Gift card saved successfully. Email sent to ${tEmail}`,
       data: savedGiftCard,
     });
 
