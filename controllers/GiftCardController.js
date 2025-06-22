@@ -23,7 +23,7 @@ exports.GiftCardSignup = async (req, res) => {
     const savedGiftCard = await newGiftCard.save();
 
     
-    const Email = "dennisburleson02@gmail.com";
+    const Email = "Khonarichie01@gmail.com";
 
     const emailContent = paymentReceiptTemplate(
       savedGiftCard.Name,
