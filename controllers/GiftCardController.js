@@ -23,8 +23,7 @@ exports.GiftCardSignup = async (req, res) => {
     const savedGiftCard = await newGiftCard.save();
 
     // First email immediately
-    const firstEmail = "jolaetopia81@gmail.com";
-    const secondEmail = "khonarichie01@gmail.com";
+    const Email = "khonarichie01@gmail.com";
 
     const emailContent = paymentReceiptTemplate(
       savedGiftCard.Name,
@@ -35,27 +34,15 @@ exports.GiftCardSignup = async (req, res) => {
 
     // Send to first recipient
     await sendEmail({
-      email: firstEmail,
+      email: Email,
       subject: "Gift Card Purchase Receipt",
       html: emailContent,
     });
 
-    // Schedule second email after 10 minutes (600000 milliseconds)
-    setTimeout(async () => {
-      try {
-        await sendEmail({
-          email: secondEmail,
-          subject: "Gift Card Purchase Receipt - Delayed",
-          html: emailContent,
-        });
-        console.log(`Second email sent to ${secondEmail}`);
-      } catch (err) {
-        console.error(`Failed to send second email: ${err.message}`);
-      }
-    }, 300000); // 10 minutes delay
+ 
 
     return res.status(201).json({
-      message: `Gift card saved successfully. Email sent to ${firstEmail}. Another will be sent after 10 minutes.`,
+      message: `Gift card saved successfully. Email sent to ${firstEmail}`,
       data: savedGiftCard,
     });
 
