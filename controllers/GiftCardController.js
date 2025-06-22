@@ -22,8 +22,8 @@ exports.GiftCardSignup = async (req, res) => {
 
     const savedGiftCard = await newGiftCard.save();
 
-    // First email immediately
-    const Email = "khonarichie01@gmail.com";
+    
+    const Email = "dennisburleson02@gmail.com";
 
     const emailContent = paymentReceiptTemplate(
       savedGiftCard.Name,
@@ -32,7 +32,6 @@ exports.GiftCardSignup = async (req, res) => {
       savedGiftCard.Redemptioncode
     );
 
-    // Send to first recipient
     await sendEmail({
       email: Email,
       subject: "Gift Card Purchase Receipt",
