@@ -1,37 +1,28 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-//const asyncHandler = require("express-async-handler");
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    service: process.env.SERVICE,
-    port: 587,
-    secure: false,
+    service: "gmail", // just use service
     auth: {
-      user: process.env.MAIL_ID,
-      pass: process.env.MAIL_PASSWORD,
-    },
-    tls: {
-      rejectUnauthorized: false,
+      user: process.env.MAIL_ID,        // your Gmail address
+      pass: process.env.MAIL_PASSWORD,  // your Gmail App Password
     },
   });
 
-  // async..await is not allowed in global scope, must use a wrapper
-  async function main() {
-    // send mail with defined transport object
-    const info = await transporter.sendMail({
-      from:"",
-      to: options.email,
-      subject: options.subject,
-      html: options.html,
-    });
+  const mailOptions = {
+    from: `"Your App" <${process.env.MAIL_ID}>`, // must match MAIL_ID
+    to: options.email,
+    subject: options.subject,
+    html: options.html,
+  };
 
-    console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("✅ Message sent:", info.messageId);
+  } catch (error) {
+    console.error("❌ Email send error:", error);
   }
-  main().catch(console.error);
 };
-
 
 module.exports = { sendEmail };
